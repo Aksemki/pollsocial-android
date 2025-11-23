@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: gap: content:">
+    <title>📊 PollSocial Pro</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="navbar" id="navbar" style="display: none;">
+            <h1 onclick="showFeed()">📊 PollSocial Pro</h1>
+            <div class="nav-icons">
+                <div class="nav-icon" onclick="toggleSearch()">🔍</div>
+                <div class="nav-icon" onclick="alert('Сообщения в разработке')">💬</div>
+                <div class="nav-icon" onclick="showProfile()">
+                    <span id="navAvatar">U</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <h1>📊 PollSocial Pro</h1>
+                <input type="text" id="serverUrl" placeholder="Адрес сервера" value="http://YOUR_SERVER_IP:3000">
+                <input type="email" id="loginEmail" placeholder="Email" value="">
+                <input type="password" id="loginPassword" placeholder="Пароль" value="">
+                <button onclick="login()">Войти</button>
+                <button class="secondary-btn" style="margin-top: 10px;" onclick="showRegister()">Регистрация</button>
+            </div>
+        </div>
+
+        <div id="registerScreen" class="screen">
+            <div class="login-container">
+                <h1>Регистрация</h1>
+                <input type="text" id="regUsername" placeholder="Имя пользователя">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPassword" placeholder="Пароль">
+                <textarea id="regBio" placeholder="О себе" rows="3"></textarea>
+                <button onclick="register()">Зарегистрироваться</button>
+                <button class="secondary-btn" style="margin-top: 10px;" onclick="showLogin()">Назад</button>
+            </div>
+        </div>
+
+        <div id="mainScreen" class="screen">
+            <div id="searchContainer">
+                <input type="text" id="userSearch" placeholder="🔍 Поиск пользователей..." oninput="searchUsers(this.value, 'all')">
+                <select id="searchFilter" onchange="searchUsers(document.getElementById('userSearch').value, this.value)">
+                    <option value="all">Все</option>
+                    <option value="followers">Мои подписчики</option>
+                    <option value="following">Мои подписки</option>
+                </select>
+                <div id="searchResults"></div>
+            </div>
+            <div id="userSuggestions"></div>
+            
+            <div class="content">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <div class="user-info">
+                        <h3 id="userName"></h3>
+                        <p>Рейтинг: <span id="userRating">0</span> ⭐ | Монет: <span id="userCoins">1000</span> 🪙</p>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('active', event)">🔥 Активные</div>
+                    <div class="tab" onclick="switchTab('history', event)">📜 История</div>
+                    <div class="tab" onclick="switchTab('results', event)">📊 Результаты</div>
+                </div>
+
+                <div class="my-bets-section" id="myBetsSection" style="display: none;">
+                    <h3 style="font-size: 14px; color: #666; margin-bottom: 10px;">🎲 Мои ставки</h3>
+                    <div id="myBetsList"></div>
+                </div>
+
+                <div id="activeContent" class="tab-content">
+                    <div class="feed-filters">
+                        <button class="filter-btn active" onclick="changeFilter('all', event)">Все</button>
+                        <button class="filter-btn" onclick="changeFilter('following', event)">Подписки</button>
+                        <button class="filter-btn" onclick="changeFilter('popular', event)">Популярное</button>
+                    </div>
+                    <div class="feed" id="pollsFeed"></div>
+                </div>
+
+                <div id="historyContent" class="tab-content" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-value" id="totalPolls">0</div><div class="stat-label">Всего опросов</div></div>
+                        <div class="stat-card"><div class="stat-value" id="totalVotes">0</div><div class="stat-label">Всего голосов</div></div>
+                        <div class="stat-card"><div class="stat-value" id="wonBets">0</div><div class="stat-label">Выигрышей</div></div>
+                        <div class="stat-card"><div class="stat-value" id="totalWinnings">0 🪙</div><div class="stat-label">Заработано</div></div>
+                    </div>
+                    <h3 style="font-size: 14px; color: #666; margin: 15px 0 10px 0;">🎲 История ставок</h3>
+                    <div id="betsHistoryList"></div>
+                    <div id="historyList"></div>
+                </div>
+
+                <div id="resultsContent" class="tab-content" style="display: none;">
+                    <div class="feed-filters">
+                        <button class="filter-btn active" onclick="filterResults('all', event)">Все</button>
+                        <button class="filter-btn" onclick="filterResults('won', event)">Выиграл</button>
+                        <button class="filter-btn" onclick="filterResults('lost', event)">Проиграл</button>
+                    </div>
+                    <div id="resultsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profileScreen" class="screen">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 20px; color: white; text-align: center;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: white; color: #667eea; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin: 0 auto 15px; border: 3px solid white;" id="profilePageAvatar">U</div>
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px;" id="profilePageUsername">Username</div>
+                <div style="font-size: 13px; opacity: 0.9; margin-bottom: 15px;" id="profilePageBio">Bio</div>
+                <div style="display: flex; justify-content: center; gap: 25px; margin-top: 15px;">
+                    <div style="text-align: center;"><div style="font-size: 18px; font-weight: bold;" id="profilePagePolls">0</div><div style="font-size: 11px; opacity: 0.9;">Опросов</div></div>
+                    <div style="text-align: center;"><div style="font-size: 18px; font-weight: bold;" id="profilePageFollowers">0</div><div style="font-size: 11px; opacity: 0.9;">Подписчиков</div></div>
+                    <div style="text-align: center;"><div style="font-size: 18px; font-weight: bold;" id="profilePageRating">0</div><div style="font-size: 11px; opacity: 0.9;">Рейтинг ⭐</div></div>
+                    <div style="text-align: center;"><div style="font-size: 18px; font-weight: bold;" id="profilePageCoins">0</div><div style="font-size: 11px; opacity: 0.9;">Монет 🪙</div></div>
+                </div>
+            </div>
+            <div style="padding: 15px; display: flex; gap: 10px; background: white;">
+                <button style="flex: 1; background: #f5f5f5; color: #667eea;" onclick="editProfile()">✏️ Редактировать</button>
+                <button style="flex: 1; background: #f44336;" onclick="logout()">⎋ Выйти</button>
+            </div>
+            <div style="padding: 15px;"><h3 style="margin-bottom: 15px;">Мои опросы</h3><div id="profilePagePollsList"></div></div>
+            <button class="floating-btn" onclick="showFeed()">←</button>
+        </div>
+
+        <!-- Модальные окна -->
+        <div id="commentsModal" class="modal" onclick="if(event.target===this) closeModal('commentsModal')">
+            <div class="modal-content">
+                <div class="modal-header"><h2>💬 Комментарии</h2><button class="modal-close" onclick="closeModal('commentsModal')">×</button></div>
+                <div id="commentsList"></div>
+                <textarea id="newComment" placeholder="Добавить комментарий..." rows="3"></textarea>
+                <button onclick="addComment()">Отправить</button>
+            </div>
+        </div>
+
+        <div id="createPollModal" class="modal" onclick="if(event.target===this) closeModal('createPollModal')">
+            <div class="modal-content">
+                <div class="modal-header"><h2>➕ Создать опрос</h2><button class="modal-close" onclick="closeModal('createPollModal')">×</button></div>
+                <input type="text" id="pollTitle" placeholder="Название опроса">
+                <textarea id="pollDescription" placeholder="Описание" rows="3"></textarea>
+                <select id="pollCategory"><option>Общее</option><option>Спорт</option><option>Технологии</option><option>Развлечения</option><option>Политика</option></select>
+                <label style="font-size: 14px; font-weight: 600; margin: 10px 0 5px 0; display: block;">🔒 Видимость опроса</label>
+                <select id="pollVisibility" onchange="handleVisibilityChange()">
+                    <option value="public">🌍 Публичный - Видят все</option>
+                    <option value="followers">👥 Только подписчики</option>
+                    <option value="selected">🎯 Выбранные пользователи</option>
+                </select>
+                <div id="selectedUsersContainer" style="display: none; margin: 10px 0;">
+                    <button type="button" class="secondary-btn" onclick="openUserSelector()" style="width: 100%; margin-bottom: 10px;">👥 Выбрать пользователей (<span id="selectedUsersCount">0</span>)</button>
+                    <div id="selectedUsersList" style="font-size: 12px; color: #666;"></div>
+                </div>
+                <label><input type="checkbox" id="allowBetting" style="width: auto; margin-right: 8px;"> Разрешить ставки</label>
+                <div id="optionsList">
+                    <div class="input-group"><label>Вариант 1</label><input type="text" class="option-input" placeholder="Первый вариант"></div>
+                    <div class="input-group"><label>Вариант 2</label><input type="text" class="option-input" placeholder="Второй вариант"></div>
+                </div>
+                <button class="secondary-btn" onclick="addOption()">+ Добавить вариант</button>
+                <button onclick="createPoll()">Создать опрос</button>
+            </div>
+        </div>
+
+        <div id="betModal" class="modal" onclick="if(event.target===this) closeModal('betModal')">
+            <div class="modal-content">
+                <div class="modal-header"><h2>🎲 Сделать ставку</h2><button class="modal-close" onclick="closeModal('betModal')">×</button></div>
+                <div class="coins-display">Доступно: <span id="modalCoins">1000</span> 🪙</div>
+                <div id="betOptions"></div>
+                <label style="margin-top: 15px;">Сумма ставки:</label>
+                <div class="quick-amounts">
+                    <button class="quick-amount-btn" onclick="setQuickAmount(10)">10 🪙</button>
+                    <button class="quick-amount-btn" onclick="setQuickAmount(50)">50 🪙</button>
+                    <button class="quick-amount-btn" onclick="setQuickAmount(100)">100 🪙</button>
+                </div>
+                <input type="number" id="betAmount" placeholder="Введите сумму" min="1">
+                <button onclick="placeBet()">Поставить</button>
+            </div>
+        </div>
+
+        <div id="userProfileModal" class="modal" onclick="if(event.target===this) closeModal('userProfileModal')"><div class="modal-content"></div></div>
+        <div id="userSelectorModal" class="modal" onclick="if(event.target===this) closeModal('userSelectorModal')">
+            <div class="modal-content">
+                <div class="modal-header"><h2>Выберите пользователей</h2><button class="modal-close" onclick="closeModal('userSelectorModal')">×</button></div>
+                <input type="text" id="userSelectorSearch" placeholder="Поиск..." oninput="searchUsersForSelector(this.value)">
+                <div id="userSelectorList"></div>
+                <button onclick="confirmUserSelection()">Готово</button>
+            </div>
+        </div>
+        <div id="followersModal" class="modal" onclick="if(event.target===this) closeModal('followersModal')">
+            <div class="modal-content">
+                <div class="modal-header"><h2 id="followersModalTitle"></h2><button class="modal-close" onclick="closeModal('followersModal')">×</button></div>
+                <div id="followersModalContent"></div>
+            </div>
+        </div>
+
+        <button class="floating-btn" onclick="openCreatePoll()" id="mainFab">+</button>
+    </div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>

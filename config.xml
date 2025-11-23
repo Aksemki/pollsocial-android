@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.pollsocial.app" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>PollSocial Pro</name>
+    <description>Социальная платформа для создания опросов и ставок</description>
+    <author email="support@pollsocial.com" href="https://pollsocial.com">
+        PollSocial Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="*" />
+    
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#667eea" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackupWebStorage" value="local" />
+    <preference name="SplashScreenDelay" value="0" />
+    <preference name="FadeSplashScreen" value="false" />
+    <preference name="ShowSplashScreen" value="false" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="www/res/icon/android/ldpi.png" />
+        <icon density="mdpi" src="www/res/icon/android/mdpi.png" />
+        <icon density="hdpi" src="www/res/icon/android/hdpi.png" />
+        <icon density="xhdpi" src="www/res/icon/android/xhdpi.png" />
+        <icon density="xxhdpi" src="www/res/icon/android/xxhdpi.png" />
+        <icon density="xxxhdpi" src="www/res/icon/android/xxxhdpi.png" />
+        
+        <preference name="AndroidInsecureFileModeEnabled" value="true" />
+        <preference name="android-minSdkVersion" value="22" />
+        <preference name="android-targetSdkVersion" value="34" />
+    </platform>
+    
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <plugin name="cordova-plugin-statusbar" spec="^4.0.0" />
+    <plugin name="cordova-plugin-network-information" spec="^3.0.0" />
+</widget>

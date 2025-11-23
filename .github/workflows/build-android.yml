@@ -1,0 +1,76 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 34
+          build-tools: 34.0.0
+      
+      - name: Install Cordova
+        run: npm install -g cordova
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build Android APK (Debug)
+        run: |
+          cordova platform add android
+          cordova build android --debug --verbose
+      
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: PollSocial-Pro-Debug
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+      
+      - name: Create Release Tag
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v3.0.${{ github.run_number }}
+          release_name: PollSocial Pro v3.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
+        continue-on-error: true
+      
+      - name: Upload Release Asset
+        if: steps.create_release.outcome == 'success'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          asset_name: PollSocial-Pro-v3.0.${{ github.run_number }}.apk
+          asset_content_type: application/vnd.android.package-archive
+        continue-on-error: true
