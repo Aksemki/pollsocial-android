@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.pollsocial.app" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.pollsocial.app" version="3.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>PollSocial Pro</name>
     <description>Социальная платформа для создания опросов и ставок</description>
     <author email="support@pollsocial.com" href="https://pollsocial.com">
@@ -25,6 +25,14 @@
     
     <platform name="android">
         <allow-intent href="market:*" />
+        
+        <!-- Network Security Config -->
+        <resource-file src="www/res/xml/network_security_config.xml" target="app/src/main/res/xml/network_security_config.xml" />
+        
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:networkSecurityConfig="@xml/network_security_config" />
+        </edit-config>
+        
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
         <preference name="android-minSdkVersion" value="22" />
         <preference name="android-targetSdkVersion" value="35" />
