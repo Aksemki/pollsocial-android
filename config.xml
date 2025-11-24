@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.pollsocial.app" version="3.7.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.pollsocial.app" version="4.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>PollSocial Pro</name>
-    <description>Социальная платформа для создания опросов и ставок</description>
+    <description>PollSocial Pro - HTTPS Production</description>
     <author email="support@pollsocial.com" href="https://pollsocial.duckdns.org">
         PollSocial Team
     </author>
@@ -9,15 +9,12 @@
     <content src="index.html" />
     
     <access origin="*" />
-    <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-navigation href="*" />
+    <allow-navigation href="https://*/*" />
     
-    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="Orientation" value="portrait" />
     <preference name="StatusBarBackgroundColor" value="#667eea" />
     <preference name="StatusBarStyle" value="lightcontent" />
-    <preference name="Orientation" value="portrait" />
-    <preference name="Fullscreen" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="local" />
     

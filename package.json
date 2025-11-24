@@ -1,7 +1,5 @@
 {
   "name": "pollsocial",
-  "version": "3.6.0",
-  "description": "PollSocial Pro - Trusted HTTPS",
-  "author": "PollSocial Team",
-  "license": "MIT"
+  "version": "4.0.0",
+  "description": "PollSocial Pro - Production HTTPS"
 }
