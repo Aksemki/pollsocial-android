@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Для разработки: доверяем всем сертификатам -->
-    <base-config>
+    <!-- Базовая конфигурация: доверяем системным и пользовательским сертификатам -->
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
     </base-config>
     
-    <!-- Разрешаем самоподписанные сертификаты для конкретных доменов/IP -->
+    <!-- Для конкретного IP разрешаем самоподписанные сертификаты -->
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">192.168.0.0</domain>
-        <domain includeSubdomains="true">10.0.0.0</domain>
+        <domain includeSubdomains="true">176.32.35.142</domain>
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
     </domain-config>
     
-    <!-- ⚠️ ДЛЯ РАЗРАБОТКИ: принимаем любые сертификаты -->
+    <!-- Для debug версии доверяем всем сертификатам -->
     <debug-overrides>
         <trust-anchors>
             <certificates src="system" />
