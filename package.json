@@ -1,1 +1,7 @@
-{"name":"pollsocial","version":"3.3.0"}
+{
+  "name": "pollsocial",
+  "version": "3.6.0",
+  "description": "PollSocial Pro - Trusted HTTPS",
+  "author": "PollSocial Team",
+  "license": "MIT"
+}
