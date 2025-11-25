@@ -271,7 +271,7 @@ async function register() {
         return;
     }
 
-    API = serverUrl + '/api';
+    API = serverUrl.replace(/\/$/, '') + '/api';
     localStorage.setItem('serverUrl', serverUrl);
 
     try {
@@ -305,7 +305,7 @@ async function login() {
         return;
     }
 
-    API = serverUrl + '/api';
+    API = serverUrl.replace(/\/$/, '') + '/api';
     localStorage.setItem('serverUrl', serverUrl);
 
     try {
